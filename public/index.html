@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Chat</title></head>
+<body>
+<div id="w" style="position:fixed;bottom:20px;right:20px;width:350px;z-index:9999;background:white;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.15)">
+<div style="background:#4472C4;color:white;padding:16px;border-radius:12px 12px 0 0;display:flex;justify-content:space-between">
+<span>受付</span>
+<button onclick="document.getElementById('w').style.display='none'" style="background:none;border:none;color:white;cursor:pointer;font-size:20px">×</button>
+</div>
+<div id="m" style="height:350px;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px"></div>
+<div style="padding:12px;border-top:1px solid #ddd;display:flex;gap:8px">
+<input id="i" placeholder="質問..." style="flex:1;padding:10px;border:1px solid #ddd;border-radius:8px" onkeypress="if(event.key=='Enter')s()">
+<button onclick="s()" style="padding:10px 16px;background:#4472C4;color:white;border:none;border-radius:8px;cursor:pointer">送信</button>
+</div>
+</div>
+<script>
+const FAQ=[
+{Q:"月の途中から入会できますか",A:"はい、15日以降は半額です"},
+{Q:"休会料はいくら",A:"月2200円です"},
+{Q:"刺青はダメ",A:"はい、ご入会いただけません"},
+{Q:"クラス変更期限",A:"前月21日までです"},
+{Q:"電話で退会できる",A:"いいえ、フロントで手続きしてください"},
+{Q:"幼児からジュニアへ",A:"3歳6か月からです"},
+{Q:"当日休む連絡",A:"午前7時までにマイページから登録してください"},
+{Q:"振替期限",A:"翌々月21日までです"},
+{Q:"振替何回",A:"週1回は月1回、週2回は月2回です"},
+{Q:"バス費用",A:"バス管理費が別途必要です"},
+{Q:"バス申込",A:"前月21日までにフロントで手続きしてください"},
+{Q:"幼稚園児バス1人",A:"いいえ、保護者同乗が必要です"},
+{Q:"バス月途中変更",A:"いいえ、1か月単位です"},
+{Q:"振替バス乗車",A:"定員により難しい場合があります"},
+{Q:"バス遅延",A:"支障が出た場合は臨時振替対象です"},
+{Q:"バス定員満",A:"定員に達していると利用できません"},
+{Q:"駐車場混雑",A:"授業入替時間が混みます"},
+{Q:"駐車ルール",A:"道路は駐車禁止、乗降は駐車場内で"},
+{Q:"駐車満車",A:"第2駐車場を利用してください"},
+{Q:"警備指示",A:"はい、従ってください"},
+{Q:"到着手続き",A:"会員証をタッチしてください"},
+{Q:"保護者観覧",A:"1名まで可能です"},
+{Q:"マイページ機能",A:"お知らせ、欠席申請、振替手続きなど"},
+{Q:"マイページ登録",A:"会員番号、メール、生年月日が必要"},
+{Q:"進級テスト時期",A:"毎月第4週目です"},
+{Q:"進級テスト休んだ",A:"翌月第1週に見極めできます"},
+{Q:"テスト結果",A:"翌日正午にマイページで確認"},
+{Q:"1級後",A:"卒業式で認定証授与"},
+{Q:"持ち物",A:"水着、帽子、タオル、会員証など"},
+{Q:"会員証紛失",A:"1100円で再発行"},
+{Q:"ゲーム持込",A:"いいえ禁止です"},
+{Q:"練習前飲食",A:"30分前は避けてください"},
+{Q:"荷物盗難補償",A:"補償はありません"},
+{Q:"ケガ補償",A:"保険範囲内で補償"}
+];
+
+async function s(){const i=document.getElementById('i'),t=i.value.trim();if(!t)return;a('u',t);i.value='';i.disabled=true;try{const r=await fetch('/api/index',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:t,faqList:FAQ})});const d=await r.json();a('b',d.error?'エラー':d.reply);}catch(e){a('b','接続エラー');}finally{i.disabled=false;i.focus();}}
+
+function a(t,c){const m=document.createElement('div');m.style.cssText='display:flex;'+(t=='u'?'justify-content:flex-end':'');const x=document.createElement('div');x.style.cssText='max-width:70%;padding:10px 14px;border-radius:8px;'+(t=='u'?'background:#4472C4;color:white':'background:#f0f0f0');x.textContent=c;m.appendChild(x);document.getElementById('m').appendChild(m);document.getElementById('m').scrollTop=9999;}
+
+setTimeout(()=>a('b','こんにちは！ご質問ください'),500);
+</script>
+</body>
+</html>
